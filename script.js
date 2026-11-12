@@ -60,12 +60,12 @@ function triggerHackerTrap(reason) {
     hackerModal.classList.remove('hidden');
   }
 
-  // 2.3 saniye terminali gösterip ardından otomatik olarak EVET akışını çalıştır
+  // 2.3 saniye terminali gösterip ardından otomatik olarak EVET akışını (Hacker modu ile) çalıştır
   setTimeout(() => {
     if (hackerModal) {
       hackerModal.classList.add('hidden');
     }
-    triggerYesFlow();
+    triggerYesFlow(true);
   }, 2400);
 }
 
@@ -280,7 +280,25 @@ window.addEventListener('resize', () => {
 // -------------------------------------------------------------
 // EVET AKIŞI (Konfeti + Ekran 2 Geçişi)
 // -------------------------------------------------------------
-function triggerYesFlow() {
+function triggerYesFlow(isHacker = false) {
+  const memeImage = document.getElementById('memeImage');
+  const memeTitle = document.getElementById('memeTitle');
+  const memeWish = document.getElementById('memeWish');
+  const memeSubWish = document.getElementById('memeSubWish');
+
+  if (isHacker) {
+    memeImage.src = 'recep-cake-sit.jpg';
+    memeTitle.textContent = 'KADERİNDEN KAÇAMAZSIN! 🎂🍑';
+    memeWish.textContent = 'Kaderinden kaçamazsın...';
+    memeSubWish.textContent = '(Pastaya oturduğuna göre afiyet olsun 😂)';
+    memeSubWish.style.display = 'block';
+  } else {
+    memeImage.src = 'recep.jpg';
+    memeTitle.textContent = 'BEN SANA PASTAYI YE Mİ DEDİM?! 🎂🤬';
+    memeWish.textContent = 'İyi ki doğdun brom! Nice mutlu, pastalı senelere! 🎉❤️';
+    memeSubWish.style.display = 'none';
+  }
+
   if (typeof confetti === 'function') {
     confetti({
       particleCount: 120,
@@ -320,7 +338,7 @@ function triggerYesFlow() {
 
 // Evet butonuna normal tıklandığında
 btnYes.addEventListener('click', () => {
-  triggerYesFlow();
+  triggerYesFlow(false);
 });
 
 // Başa Dön (Tekrar Oyna) Butonu
@@ -337,6 +355,16 @@ if (btnRestart) {
       placeholder.parentNode.insertBefore(btnNo, placeholder);
       placeholder.remove();
     }
+
+    const memeImage = document.getElementById('memeImage');
+    const memeTitle = document.getElementById('memeTitle');
+    const memeWish = document.getElementById('memeWish');
+    const memeSubWish = document.getElementById('memeSubWish');
+
+    memeImage.src = 'recep.jpg';
+    memeTitle.textContent = 'BEN SANA PASTAYI YE Mİ DEDİM?! 🎂🤬';
+    memeWish.textContent = 'İyi ki doğdun brom! Nice mutlu, pastalı senelere! 🎉❤️';
+    if (memeSubWish) memeSubWish.style.display = 'none';
 
     btnNo.style.position = '';
     btnNo.style.left = '';
