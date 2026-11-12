@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doğum Günün Kutlu Olsun! 🎉</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Arka plan süsleri / konfeti & balonlar -->
+  <div class="bg-decorations" aria-hidden="true">
+    <span class="floating-item" style="--delay: 0s; --x: 10%;">🎈</span>
+    <span class="floating-item" style="--delay: 2s; --x: 25%;">✨</span>
+    <span class="floating-item" style="--delay: 4s; --x: 80%;">🎂</span>
+    <span class="floating-item" style="--delay: 1.5s; --x: 90%;">🍾</span>
+    <span class="floating-item" style="--delay: 3s; --x: 50%;">🎉</span>
+    <span class="floating-item" style="--delay: 5s; --x: 70%;">💅</span>
+  </div>
+
+  <!-- Ana Kart: Ekran 1 -->
+  <main class="container" id="screen-1">
+    <div class="card">
+      <div class="badge">🔥 ÖZEL GÜN ALARMI 🔥</div>
+      
+      <h1 class="main-title">
+        Doğum Günün Kutlu Olsun brom.<br>
+        <span class="highlight">Artık MİLF'sin.</span>
+      </h1>
+
+      <p class="question">Hediyeni görmek ister misin?</p>
+
+      <div class="btn-group" id="btnGroup">
+        <!-- İstese de tıklanamayan Hayır butonu -->
+        <button type="button" class="btn btn-no" id="btnNo">Hayır</button>
+        <!-- Tıklanacak Evet butonu -->
+        <button type="button" class="btn btn-yes" id="btnYes">Evet 😍</button>
+      </div>
+
+      <div class="funny-hint" id="funnyHint"></div>
+    </div>
+  </main>
+
+  <!-- Ekran 2 Konteyneri -->
+  <section class="container hidden" id="screen-2">
+    <div class="card screen-2-card">
+      <div class="meme-header">
+        <h2 class="meme-title">BEN SANA PASTAYI YE Mİ DEDİM?! 🎂🤬</h2>
+      </div>
+
+      <div class="image-wrapper">
+        <img src="recep.jpg" alt="Recep İvedik Pasta" class="meme-image" id="memeImage">
+      </div>
+
+      <div class="screen-2-footer">
+        <p class="birthday-wish">İyi ki doğdun brom! Nice mutlu, pastalı senelere! 🎉❤️</p>
+        <button type="button" class="btn btn-restart" id="btnRestart">Başa Dön 🔄</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

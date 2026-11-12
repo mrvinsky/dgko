@@ -1,0 +1,354 @@
+:root {
+  --primary: #ff2e93;
+  --primary-glow: rgba(255, 46, 147, 0.45);
+  --secondary: #ff8e53;
+  --bg-gradient: radial-gradient(circle at 20% 20%, #200f3b 0%, #0d071a 100%);
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --text-main: #ffffff;
+  --text-muted: #d0c3eb;
+  --accent-gold: #ffd166;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  padding: 1.5rem;
+}
+
+/* Arka plan süzülen emojiler */
+.bg-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.floating-item {
+  position: absolute;
+  bottom: -60px;
+  left: var(--x);
+  font-size: 2.4rem;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+  animation: floatUp 10s infinite linear;
+  animation-delay: var(--delay);
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Ana kart yapısı */
+.container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 580px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.container.hidden {
+  display: none;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  padding: 3rem 2.2rem;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45),
+              0 0 40px rgba(255, 46, 147, 0.15);
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 0.4rem 1.1rem;
+  border-radius: 50px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.main-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b, #ffb199);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-size: 2.5rem;
+  text-shadow: 0 0 30px rgba(255, 75, 43, 0.3);
+  animation: pulseHighlight 2s infinite ease-in-out;
+}
+
+@keyframes pulseHighlight {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.question {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+}
+
+/* Buton grubu */
+.btn-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  min-height: 70px;
+  position: relative;
+}
+
+.btn {
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.95rem 2.2rem;
+  border-radius: 16px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease;
+  will-change: transform, left, top;
+}
+
+/* Evet butonu */
+.btn-yes {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+  animation: glowPulse 2s infinite;
+}
+
+.btn-yes:hover {
+  transform: scale(1.08);
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.6);
+}
+
+.btn-yes:active {
+  transform: scale(0.96);
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7);
+  }
+}
+
+/* Kaçan Hayır butonu */
+.btn-no {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ff6b81;
+  border: 1px solid rgba(255, 107, 129, 0.4);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 999;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: left 0.18s cubic-bezier(0.18, 0.89, 0.32, 1.2), 
+              top 0.18s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+  will-change: left, top;
+}
+
+/* Komik ipucu yazısı */
+.funny-hint {
+  margin-top: 1.8rem;
+  min-height: 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 0.3s ease;
+}
+
+.funny-hint.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ekran 2 Stilleri */
+.screen-2-card {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 2.2rem 1.8rem;
+  animation: screenPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes screenPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.meme-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #ffdd59;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 4px 15px rgba(255, 221, 89, 0.3),
+               0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: titleShake 0.6s ease;
+}
+
+@keyframes titleShake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-2deg) scale(1.03); }
+  40% { transform: rotate(2deg) scale(1.03); }
+  60% { transform: rotate(-1deg); }
+  80% { transform: rotate(1deg); }
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
+              0 0 30px rgba(255, 75, 43, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 1.5rem;
+  background: #000;
+}
+
+.meme-image {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.image-wrapper:hover .meme-image {
+  transform: scale(1.03);
+}
+
+.screen-2-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.birthday-wish {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.btn-restart {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.75rem 1.8rem;
+  font-size: 1rem;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-restart:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-restart:active {
+  transform: translateY(0);
+}
+
+/* Responsive Düzenlemeler */
+@media (max-width: 500px) {
+  .meme-title {
+    font-size: 1.5rem;
+  }
+  
+  .screen-2-card {
+    padding: 1.6rem 1.1rem;
+  }
+}
+@media (max-width: 500px) {
+  .card {
+    padding: 2.2rem 1.4rem;
+    border-radius: 22px;
+  }
+
+  .main-title {
+    font-size: 1.7rem;
+  }
+
+  .highlight {
+    font-size: 1.95rem;
+  }
+
+  .question {
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    padding: 0.85rem 1.6rem;
+    font-size: 1.05rem;
+  }
+}
