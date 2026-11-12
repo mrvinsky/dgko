@@ -3,15 +3,12 @@ const btnYes = document.getElementById('btnYes');
 const funnyHint = document.getElementById('funnyHint');
 const screen1 = document.getElementById('screen-1');
 const screen2 = document.getElementById('screen-2');
-const hackerModal = document.getElementById('hackerModal');
-const hackerReason = document.getElementById('hackerReason');
 
 let isFixed = false;
 let currentX = 0;
 let currentY = 0;
 let escapeCount = 0;
 let lastQuoteTime = 0;
-let trapTriggered = false;
 
 const funnyQuotes = [
   "Basamazsın ki kanka 😂",
@@ -23,70 +20,10 @@ const funnyQuotes = [
   "Bana yetişemezsin brom! ⚡"
 ];
 
-// -------------------------------------------------------------
-// YAZILIMCI EASTER EGG: Console Karşılama Mesajı
-// -------------------------------------------------------------
+// Console'a bakan yazılımcıya tatlı bir selamlama
 console.log('%c🛑 HOOOOP HEMŞERİM NEREYE?! 🛑', 'font-size: 24px; font-weight: 900; color: #ff2e93; background: #0d071a; padding: 12px 18px; border-radius: 8px; border: 2px solid #ff2e93;');
-console.log('%c👨‍💻 Console\'u açtığını gördük yazılımcı brom...', 'font-size: 15px; font-weight: bold; color: #ffd166;');
-console.log('%cBoşuna `btnNo.click()` yazıp Hayır\'a tıklamaya çalışma, prod ortamında kuralı biz koyarız! 😉', 'font-size: 13px; color: #d0c3eb;');
-console.log('%cHTTP 418: I am a MILF 💅🎂', 'font-size: 13px; color: #50fa7b; font-style: italic;');
-
-// Yazılımcı arkadaş console'a hayir() veya bypass() yazarsa
-window.hayir = function() {
-  triggerHackerTrap("Console'a hayir() fonksiyonu yazıldı!");
-  return "🚨 HACKERMAN TESPİT EDİLDİ... Sistem kilitleniyor! 😈";
-};
-
-window.bypass = function() {
-  triggerHackerTrap("Bypass fonksiyonu çağrıldı!");
-  return "Bypass yemez kanka, tek yol EVET! 😂";
-};
-
-// -------------------------------------------------------------
-// YAZILIMCI TUZAĞI: Hacker Terminal Ekranını Tetikle
-// -------------------------------------------------------------
-function triggerHackerTrap(reason) {
-  if (trapTriggered) return;
-  trapTriggered = true;
-
-  console.error("⚠️ Uncaught (in promise) YazilimciUyanikligiException: " + reason);
-  console.warn("MİLF statüsü konsoldan değiştirilemez. Otomatik olarak 'EVET' seçiliyor.");
-
-  if (hackerReason) {
-    hackerReason.textContent = `> ${reason} 💻🕵️‍♂️`;
-  }
-
-  if (hackerModal) {
-    hackerModal.classList.remove('hidden');
-  }
-
-  // 2.3 saniye terminali gösterip ardından otomatik olarak EVET akışını (Hacker modu ile) çalıştır
-  setTimeout(() => {
-    if (hackerModal) {
-      hackerModal.classList.add('hidden');
-    }
-    triggerYesFlow(true);
-  }, 2400);
-}
-
-// btnNo.click fonksiyonunu override et (Console'dan çağırırsa yakalar)
-btnNo.click = function() {
-  triggerHackerTrap("Console'dan `btnNo.click()` çağrıldı!");
-};
-
-// DOM'dan butonu silmeye kalkarsa yakala (MutationObserver)
-const observer = new MutationObserver((mutations) => {
-  if (trapTriggered) return;
-  for (const m of mutations) {
-    for (const node of m.removedNodes) {
-      if (node.id === 'btnNo' || node.id === 'screen-1') {
-        triggerHackerTrap("DOM'dan butonu silmeye çalıştın!");
-        return;
-      }
-    }
-  }
-});
-observer.observe(document.body, { childList: true, subtree: true });
+console.log('%c👨‍💻 Console\'dan Hayır\'a tıklamayı deneyeceğini biliyorduk yazılımcı brom...', 'font-size: 15px; font-weight: bold; color: #ffd166;');
+console.log('%cHadi tıkla bakalım `btnNo.click()` ile ne oluyormuş gör 😉', 'font-size: 13px; color: #50fa7b;');
 
 function showFunnyHint() {
   const now = Date.now();
@@ -105,7 +42,7 @@ function showFunnyHint() {
   }
 }
 
-// Butonu ilk kaçış anında layout'u bozmadan fixed konuma geçir ve tüm ekranda özgürce dolaşabilmesi için body'ye taşı
+// Butonu ilk kaçış anında layout'u bozmadan fixed konuma geçir ve tüm ekranda serbestçe dolaşabilmesi için body'ye taşı
 function ensureFixedPosition() {
   if (!isFixed) {
     const rect = btnNo.getBoundingClientRect();
@@ -122,7 +59,7 @@ function ensureFixedPosition() {
     currentX = rect.left;
     currentY = rect.top;
 
-    // Kartın (backdrop-filter / transform) sınırından kurtulup TÜM EKRANDA gezebilmesi için body'ye ekle
+    // Kartın sınırlarından kurtulup tüm ekranda özgürce kaçması için body'ye ekle
     document.body.appendChild(btnNo);
 
     btnNo.style.position = 'fixed';
@@ -136,8 +73,8 @@ function ensureFixedPosition() {
 }
 
 // İmleç veya parmak yaklaştıkça butonu tüm ekran içinde kaçıran fonksiyon
+// DİKKAT: Bu fonksiyon ASLA ekran değiştirmez, sadece butonu kaçırır!
 function evadePointer(clientX, clientY, forceDistance = null) {
-  if (trapTriggered) return;
   ensureFixedPosition();
 
   const btnWidth = btnNo.offsetWidth;
@@ -241,24 +178,10 @@ btnNo.addEventListener('touchstart', (e) => {
   handleTouch(e);
 }, { passive: false });
 
-// Tıklama girişimini engelle (Sentetik click veya kodla tetikleme kontrolü)
-btnNo.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  // Eğer gerçek bir insan tıklaması değilse (console dispatchEvent vs.)
-  if (!e.isTrusted) {
-    triggerHackerTrap("Sentetik click (isTrusted: false) tespit edildi!");
-    return;
-  }
-
-  evadePointer(e.clientX, e.clientY, 200);
-});
-
 btnNo.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault();
-    evadePointer(currentX + btnNo.offsetWidth / 2, currentY + btnNo.offsetHeight / 2, 200);
+    handleHayirClick();
   }
 });
 
@@ -278,27 +201,30 @@ window.addEventListener('resize', () => {
 });
 
 // -------------------------------------------------------------
-// EVET AKIŞI (Konfeti + Ekran 2 Geçişi)
+// EKRAN 2 YÖNETİMİ
 // -------------------------------------------------------------
-function triggerYesFlow(isHacker = false) {
+function showScreen2(type) {
   const memeImage = document.getElementById('memeImage');
   const memeTitle = document.getElementById('memeTitle');
   const memeWish = document.getElementById('memeWish');
   const memeSubWish = document.getElementById('memeSubWish');
 
-  if (isHacker) {
+  if (type === 'hayir') {
+    // SADECE HAYIR'A TIKLANDIĞINDA (Console'dan vb.)
     memeImage.src = 'recep-cake-sit.jpg';
     memeTitle.textContent = 'KADERİNDEN KAÇAMAZSIN! 🎂🍑';
     memeWish.textContent = 'Kaderinden kaçamazsın...';
     memeSubWish.textContent = '(Pastaya oturduğuna göre afiyet olsun 😂)';
     memeSubWish.style.display = 'block';
   } else {
+    // EVET'E TIKLANDIĞINDA
     memeImage.src = 'recep.jpg';
     memeTitle.textContent = 'BEN SANA PASTAYI YE Mİ DEDİM?! 🎂🤬';
     memeWish.textContent = 'İyi ki doğdun brom! Nice mutlu, pastalı senelere! 🎉❤️';
     memeSubWish.style.display = 'none';
   }
 
+  // Konfeti efekti
   if (typeof confetti === 'function') {
     confetti({
       particleCount: 120,
@@ -322,24 +248,51 @@ function triggerYesFlow(isHacker = false) {
     }, 250);
   }
 
+  // Ekran geçişi
   setTimeout(() => {
     screen1.style.opacity = '0';
     screen1.style.transform = 'scale(0.9)';
-    btnNo.style.display = 'none'; // Ekran 2'ye geçerken Hayır butonunu kaldır
+    btnNo.style.display = 'none';
     
     setTimeout(() => {
       screen1.classList.add('hidden');
       screen2.classList.remove('hidden');
       screen2.style.opacity = '1';
       screen2.style.transform = 'scale(1)';
-    }, 300);
-  }, 600);
+    }, 250);
+  }, 400);
 }
 
-// Evet butonuna normal tıklandığında
+// -------------------------------------------------------------
+// BUTON TIKLAMA OLAYLARI
+// -------------------------------------------------------------
+
+// Evet butonuna tıklandığında: Normal akış
 btnYes.addEventListener('click', () => {
-  triggerYesFlow(false);
+  showScreen2('evet');
 });
+
+// Sadece Hayır'a tıklanırsa (Örn: Console'dan btnNo.click()):
+function handleHayirClick(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  showScreen2('hayir');
+}
+
+btnNo.addEventListener('click', handleHayirClick);
+
+// Console'dan doğrudan btnNo.click() veya document.getElementById('btnNo').click() çağrılırsa
+btnNo.click = function() {
+  handleHayirClick();
+};
+
+// Console kısayolu: hayir()
+window.hayir = function() {
+  handleHayirClick();
+  return "Kaderinden kaçamazsın kanka... 🎂🍑";
+};
 
 // Başa Dön (Tekrar Oyna) Butonu
 const btnRestart = document.getElementById('btnRestart');
@@ -378,6 +331,5 @@ if (btnRestart) {
 
     isFixed = false;
     escapeCount = 0;
-    trapTriggered = false;
   });
 }
