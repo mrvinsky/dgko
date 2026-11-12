@@ -37,7 +37,7 @@ function showFunnyHint() {
   }
 }
 
-// Butonu ilk kaçış anında layout'u bozmadan fixed konuma geçir
+// Butonu ilk kaçış anında layout'u bozmadan fixed konuma geçir ve tüm ekranda özgürce dolaşabilmesi için body'ye taşı
 function ensureFixedPosition() {
   if (!isFixed) {
     const rect = btnNo.getBoundingClientRect();
@@ -54,17 +54,20 @@ function ensureFixedPosition() {
     currentX = rect.left;
     currentY = rect.top;
 
+    // Kartın (backdrop-filter / transform) sınırından kurtulup TÜM EKRANDA gezebilmesi için body'ye ekle
+    document.body.appendChild(btnNo);
+
     btnNo.style.position = 'fixed';
     btnNo.style.left = `${currentX}px`;
     btnNo.style.top = `${currentY}px`;
     btnNo.style.margin = '0';
-    btnNo.style.zIndex = '9999';
+    btnNo.style.zIndex = '99999';
 
     isFixed = true;
   }
 }
 
-// İmleç veya parmak yaklaştıkça butonu ekran içinde kaçıran fonksiyon
+// İmleç veya parmak yaklaştıkça butonu tüm ekran içinde kaçıran fonksiyon
 function evadePointer(clientX, clientY, forceDistance = null) {
   ensureFixedPosition();
 
@@ -78,7 +81,7 @@ function evadePointer(clientX, clientY, forceDistance = null) {
   const distY = btnCenterY - clientY;
   const distance = Math.hypot(distX, distY);
 
-  const threshold = forceDistance !== null ? forceDistance : 130;
+  const threshold = forceDistance !== null ? forceDistance : 150;
 
   // İmleç yaklaşma sınırındaysa kaç
   if (distance < threshold) {
@@ -86,13 +89,13 @@ function evadePointer(clientX, clientY, forceDistance = null) {
 
     // İmlecin tam tersi yönünde kaçış açısı
     const angle = distance > 0 ? Math.atan2(distY, distX) : Math.random() * Math.PI * 2;
-    const pushFactor = (threshold - distance) * 1.5 + 45;
+    const pushFactor = (threshold - distance) * 1.8 + 70;
 
     let targetX = currentX + Math.cos(angle) * pushFactor;
     let targetY = currentY + Math.sin(angle) * pushFactor;
 
     // Ekran sınırları (güvenli boşluk ile - asla dışarı çıkamaz)
-    const padding = 20;
+    const padding = 25;
     const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth || window.innerWidth);
     const viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight || window.innerHeight);
 
@@ -104,18 +107,18 @@ function evadePointer(clientX, clientY, forceDistance = null) {
     // Köşeye / kenara sıkışırsa duvar boyunca kaysın, imlecin arkasına dolansın
     if (targetX < minX) {
       targetX = minX;
-      targetY += (clientY < btnCenterY) ? 80 : -80;
+      targetY += (clientY < btnCenterY) ? 100 : -100;
     } else if (targetX > maxX) {
       targetX = maxX;
-      targetY += (clientY < btnCenterY) ? 80 : -80;
+      targetY += (clientY < btnCenterY) ? 100 : -100;
     }
 
     if (targetY < minY) {
       targetY = minY;
-      targetX += (clientX < btnCenterX) ? 80 : -80;
+      targetX += (clientX < btnCenterX) ? 100 : -100;
     } else if (targetY > maxY) {
       targetY = maxY;
-      targetX += (clientX < btnCenterX) ? 80 : -80;
+      targetX += (clientX < btnCenterX) ? 100 : -100;
     }
 
     // "Evet" butonunun üstüne binmesini engelle
@@ -126,13 +129,13 @@ function evadePointer(clientX, clientY, forceDistance = null) {
     const predictedCenterY = targetY + btnHeight / 2;
     const distToYes = Math.hypot(predictedCenterX - yesCenterX, predictedCenterY - yesCenterY);
 
-    if (distToYes < 100) {
+    if (distToYes < 110) {
       const angleAwayFromYes = Math.atan2(predictedCenterY - yesCenterY, predictedCenterX - yesCenterX);
-      targetX += Math.cos(angleAwayFromYes) * 70;
-      targetY += Math.sin(angleAwayFromYes) * 70;
+      targetX += Math.cos(angleAwayFromYes) * 85;
+      targetY += Math.sin(angleAwayFromYes) * 85;
     }
 
-    // KESİN SINIR KONTROLÜ (Matematiksel olarak ekran dışına çıkması imkansız)
+    // KESİN SINIR KONTROLÜ (Tüm ekran sınırları içinde)
     currentX = Math.max(minX, Math.min(maxX, targetX));
     currentY = Math.max(minY, Math.min(maxY, targetY));
 
@@ -247,7 +250,8 @@ if (btnRestart) {
     screen1.style.transform = 'scale(1)';
 
     const placeholder = document.getElementById('btnNoPlaceholder');
-    if (placeholder) {
+    if (placeholder && placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(btnNo, placeholder);
       placeholder.remove();
     }
 
